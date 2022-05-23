@@ -20,15 +20,29 @@ namespace TainghesStore.Controllers
         }
 
         // GET: Tainghes
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Index(string taingheGenre, string searchString)
         {
+            // Use LINQ to get list of genres.
+            IQueryable<string> genreQuery = from b in _context.Tainghe
+                                            orderby b.Genre
+                                            select b.Genre;
             var tainghes = from b in _context.Tainghe
                         select b;
-            if (!String.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                tainghes = tainghes.Where(s => s.Title!.Contains(id));
+                tainghes = tainghes.Where(s => s.Title!.Contains(searchString));
             }
-            return View(await tainghes.ToListAsync());
+            if (!string.IsNullOrEmpty(taingheGenre))
+            {
+                tainghes = tainghes.Where(x => x.Genre == taingheGenre);
+            }
+            var GenreVM = new GenreViewModel
+            {
+                Genres = new SelectList(await
+           genreQuery.Distinct().ToListAsync()),
+                Tainghes = await tainghes.ToListAsync()
+            };
+            return View(GenreVM);
         }
 
 
@@ -61,7 +75,7 @@ namespace TainghesStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price")] Tainghe tainghe)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,Rating")] Tainghe tainghe)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +107,7 @@ namespace TainghesStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price")] Tainghe tainghe)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price,Rating")] Tainghe tainghe)
         {
             if (id != tainghe.Id)
             {

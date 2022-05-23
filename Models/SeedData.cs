@@ -23,13 +23,15 @@ namespace TainghesStore.Models
                 {
                     Title = "Atomic Habits",
                     Genre = "Self-Help",
-                    Price = 11.98M
+                    Price = 11.98M,
+                    Rating = "R"
                 },
                 new Tainghe
                 {
                     Title = "Dark Roads",
                     Genre = "Novel",
-                    Price = 18.59M
+                    Price = 18.59M,
+                    Rating = "R"
                 }
                 );
                 context.SaveChanges();//lưu dữ liệu

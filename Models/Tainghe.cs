@@ -17,5 +17,6 @@ namespace TainghesStore.Models
         public string Genre { get; set; }
         [Display(Name = "Giá")]
         public decimal Price { get; set; }
+        public string Rating { get; set; }
     }
 }
